@@ -1,0 +1,3 @@
+rootProject.name = 'dikonsuite'
+
+include 'dikon', 'buri', 'buriteri'

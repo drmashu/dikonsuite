@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/buri/buri.iml" filepath="$PROJECT_DIR$/buri/buri.iml" />
+      <module fileurl="file://$PROJECT_DIR$/buriteri/buriteri.iml" filepath="$PROJECT_DIR$/buriteri/buriteri.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dikon/dikon.iml" filepath="$PROJECT_DIR$/dikon/dikon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/dikonsuite.iml" filepath="$PROJECT_DIR$/dikonsuite.iml" />
+    </modules>
+  </component>
+</project>
