@@ -25,7 +25,6 @@ subprojects {
             classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:0.14.449'
         }
     }
-
     apply plugin: 'kotlin'
     apply plugin: 'maven'
     apply plugin: 'ivy-publish'
