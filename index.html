@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Dikonsuite by drmashu</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/drmashu/dikonsuite">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/drmashu/dikonsuite/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/drmashu/dikonsuite/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Dikonsuite</h1>
+          <p></p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/drmashu">drmashu</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="dikon" class="anchor" href="#dikon" aria-hidden="true"><span class="octicon octicon-link"></span></a>dikon</h1>
+
+<p><strong>dikon</strong> is "DI CONtainer written in Kotlin".
+<strong>dikon</strong> is Japanese "Daikon" radish.</p>
+
+<p>Kotlinの勉強を兼ねて、KotlinでDI コンテナを中心としたMVCフレームワークを作っています。</p>
+
+<h2>
+<a id="設定" class="anchor" href="#%E8%A8%AD%E5%AE%9A" aria-hidden="true"><span class="octicon octicon-link"></span></a>設定</h2>
+
+<p>Dikonには設定ファイルというもの無く、オブジェクト名をキーにファクトリを割り当てるMapを作り、Dikonのコンストラクタに渡すことで設定します。</p>
+
+<p>ファクトリはインターフェイスと含め、5種類用意しています。</p>
+
+<h3>
+<a id="factory" class="anchor" href="#factory" aria-hidden="true"><span class="octicon octicon-link"></span></a>Factory</h3>
+
+<p>インターフェイスです。
+用意されたファクトリではオブジェクトの生成に問題がある場合などには、こちらを利用してください。</p>
+
+<h3>
+<a id="create" class="anchor" href="#create" aria-hidden="true"><span class="octicon octicon-link"></span></a>Create</h3>
+
+<p>指定したクラスのインスタンスを作るだけのファクトリです。</p>
+
+<h3>
+<a id="injection" class="anchor" href="#injection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Injection</h3>
+
+<p>指定したクラスのインスタンスを生成する際に、コンストラクタインジェクションを行います。</p>
+
+<h3>
+<a id="singleton" class="anchor" href="#singleton" aria-hidden="true"><span class="octicon octicon-link"></span></a>Singleton</h3>
+
+<p>ファクトリで生成したオブジェクトをシングルトンで提供するファクトリです。</p>
+
+<h3>
+<a id="holder" class="anchor" href="#holder" aria-hidden="true"><span class="octicon octicon-link"></span></a>Holder</h3>
+
+<p>生成済みのオブジェクトを保持するだけで、生成はしません。</p>
+
+<h2>
+<a id="今後の予定" class="anchor" href="#%E4%BB%8A%E5%BE%8C%E3%81%AE%E4%BA%88%E5%AE%9A" aria-hidden="true"><span class="octicon octicon-link"></span></a>今後の予定</h2>
+
+<ul>
+<li>
+<a href="./buri/README.md">Buri</a>の強化</li>
+<li>KotlinによるMicro ORM実装？</li>
+<li>もしくはJPA準拠ORMのKotlin向けラッパーの作成？</li>
+</ul>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
