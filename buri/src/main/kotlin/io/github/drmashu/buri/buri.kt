@@ -58,7 +58,7 @@ public abstract class Buri() : DefaultServlet() {
             while (matcher.find()) {
                 names.add(matcher.group(1))
             }
-            val value = Pair(NamedPattern(pattern, names.toTypedArray()), entry.value)
+            val value = NamedPattern(pattern, names.toTypedArray()) to entry.value
             for (method in methods) {
                 var list = result.get(method)
                 if (list == null) {
@@ -83,8 +83,8 @@ public abstract class Buri() : DefaultServlet() {
                 val matcher = pattern.matcher(req.pathInfo)
                 if (matcher.matches()) {
                     val paramMap: MutableMap<String, Factory<*>> = hashMapOf(
-                            Pair("request", Holder(req)),
-                            Pair("response", Holder(res))
+                            "request" to Holder(req),
+                            "response" to Holder(res)
                     )
                     for(name in item.first.names) {
                         paramMap.put(name, Holder(matcher.group(name)))

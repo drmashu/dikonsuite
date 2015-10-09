@@ -39,7 +39,7 @@ public class BuriRunner(val buri: Buri) {
 
         val servletContextHandler = ServletContextHandler()
         servletContextHandler.contextPath = "/"
-        servletContextHandler.resourceBase = "./"
+        servletContextHandler.resourceBase = "./webapp"
 
         val holder = ServletHolder(buri)
         servletContextHandler.addServlet(holder, "/*")
