@@ -100,3 +100,5 @@ public class Holder<T: Any>(val value: T) : Factory<T> {
         return value
     }
 }
+
+public fun getKClassForName(name:String): KClass<out Any> = Class.forName(name)!!.kotlin
