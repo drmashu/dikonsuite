@@ -1,5 +1,6 @@
 package io.github.drmashu.dikon
 
+import org.apache.logging.log4j.LogManager
 import kotlin.reflect.*
 
 /**
@@ -19,7 +20,9 @@ public interface Factory<T: Any> {
  * @author NAGASAWA Takahiro<drmashu@gmail.com>
  */
 public open class Singleton<T: Any>(val factory: Factory<T>) : Factory<T> {
-
+    companion object{
+        val logger = LogManager.getLogger(Singleton::class.java)
+    }
     /**
      * インスタンス
      */
@@ -34,6 +37,7 @@ public open class Singleton<T: Any>(val factory: Factory<T>) : Factory<T> {
         if (instance == null) {
             instance = factory.get(dikon)
         }
+        logger.trace("get ${if (instance == null) "null" else instance!!.javaClass.kotlin.qualifiedName}:${instance.toString()}")
         return instance
     }
 }
@@ -44,7 +48,11 @@ public open class Singleton<T: Any>(val factory: Factory<T>) : Factory<T> {
  * @param kClass 生成対象のクラス
  */
 public open class Create<T: Any>(val kClass: KClass<T>) : Factory<T> {
+    companion object{
+        val logger = LogManager.getLogger(Create::class.java)
+    }
     override fun get(dikon: Container): T? {
+        logger.trace("get ${kClass.qualifiedName}")
         return kClass.create()
     }
 }
@@ -57,20 +65,31 @@ public open class Create<T: Any>(val kClass: KClass<T>) : Factory<T> {
  * @author NAGASAWA Takahiro<drmashu@gmail.com>
  * @param kClass 生成対象のクラス
  */
-public open class Injection<T: Any>(val kClass: KClass<T>) : Factory<T> {
-
+public open class Injection<T: Any>(val kClass: KClass<T>, vararg names: String) : Factory<T> {
+    companion object{
+        val logger = LogManager.getLogger(Injection::class.java)
+    }
+    val names: List<String>
+    init {
+        this.names = names.asList()
+    }
     /**
      * インスタンスの取得
      * @return インスタンス
      */
     public override fun get(dikon: Container): T? {
+        logger.entry("get")
+        logger.trace("Injection get ${kClass.qualifiedName}")
+        var result: T? = null
         val constructor = kClass.primaryConstructor
         if (constructor != null) {
+            logger.trace("KClass constructor")
             val params = constructor.parameters
             var paramArray = Array<Any?>(params.size(), { null })
             for (idx in params.indices) {
                 val param = params[idx]
                 var name = param.name
+                logger.trace("param name $name")
                 for (anno in param.annotations) {
                     if (anno is inject) {
                         name = anno.name
@@ -78,6 +97,7 @@ public open class Injection<T: Any>(val kClass: KClass<T>) : Factory<T> {
                     }
                 }
                 if (name != null) {
+                    logger.trace("Inject $name")
                     if (name == "dikon") {
                         paramArray[idx] = dikon
                     } else {
@@ -85,9 +105,38 @@ public open class Injection<T: Any>(val kClass: KClass<T>) : Factory<T> {
                     }
                 }
             }
-            return constructor.call(*paramArray) as T
+            result = constructor.call(*paramArray)
+        } else {
+            logger.trace("Java Class constructor")
+            val jConstractor = kClass.java.constructors[0]
+            var idx = 0
+            var paramArray = Array<Any?>(jConstractor.parameters.size(), { null })
+            for(param in jConstractor.parameters) {
+                var name = param.name
+                logger.trace("param name $name")
+                for (anno in param.annotations) {
+                    if (anno is inject) {
+                        name = anno.name
+                        break
+                    }
+                }
+                if (names.size() > idx) {
+                    name = names[idx]
+                }
+                if (name != null) {
+                    logger.trace("Inject $name")
+                    if (name == "dikon") {
+                        paramArray[idx] = dikon
+                    } else {
+                        paramArray[idx] = dikon.get(name)
+                    }
+                }
+                idx++
+            }
         }
-        return null
+
+        logger.exit(result)
+        return result
     }
 }
 
@@ -96,7 +145,11 @@ public open class Injection<T: Any>(val kClass: KClass<T>) : Factory<T> {
  * @author NAGASAWA Takahiro<drmashu@gmail.com>
  */
 public class Holder<T: Any>(val value: T) : Factory<T> {
+    companion object{
+        val logger = LogManager.getLogger(Holder::class.java)
+    }
     override fun get(dikon: Container): T? {
+        logger.trace("get ${value.javaClass.name}:${value.toString()}")
         return value
     }
 }

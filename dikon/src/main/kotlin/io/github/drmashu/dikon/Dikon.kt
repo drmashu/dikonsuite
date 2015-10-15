@@ -1,5 +1,6 @@
 package io.github.drmashu.dikon
 import java.lang.reflect.Method
+import org.apache.logging.log4j.LogManager
 import kotlin.reflect.*
 import kotlin.reflect.jvm.*
 
@@ -11,22 +12,31 @@ import kotlin.reflect.jvm.*
  */
 public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
 
+    companion object {
+        val logger = LogManager.getLogger(Dikon::class.java)
+    }
     /**
      * オブジェクトの取得
      * @param name
      */
     public override fun get(name:String) : Any? {
-        val obj = objectMap[name]
+        logger.entry("get", name)
+        val obj:Any? = if (name == "logger") logger else objectMap[name]
 
-        return injectProperties(
+        val result = injectProperties(
             if (obj == null) {
+                logger.trace("get null")
                 null
             } else if (obj is Factory<*>) {
+                logger.trace("get From Factory $obj")
                 obj.get(this)
             } else {
+                logger.trace("get obj $obj")
                 obj
             }
         )
+        logger.exit(result)
+        return result
     }
 
     /**
@@ -34,6 +44,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
      * @param obj 対象のオブジェクト
      */
     protected fun injectProperties(obj: Any?): Any? {
+        logger.entry("injectProperties", obj)
         if (obj != null) {
             val kClass = obj.javaClass.kotlin
             try {
@@ -74,6 +85,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
                 // Kotlinでのリフレクションが失敗する場合(Javaのクラスなど)は自動ではインジェクションしない
             }
         }
+        logger.exit(obj)
         return obj
     }
 
@@ -84,12 +96,14 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
      * @param value セットする値
      */
     protected fun callSetter(obj: Any?, setter: Method?, value: Any?) {
+        logger.entry("callSetter", obj, setter, value)
         if (setter != null && value != null) {
             val paramTypes = setter.parameterTypes
             if (paramTypes.size() == 1 && paramTypes[0].isAssignableFrom(value.javaClass)) {
                 setter.invoke(obj, value)
             }
         }
+        logger.exit()
     }
 }
 
@@ -102,18 +116,21 @@ interface Container {
  */
 annotation class inject(val name: String = "")
 
+val kClassLogger = LogManager.getLogger(KClass::class.java)
 /**
  * デフォルトコンストラクタを探して呼び出す
  */
 public fun <T: Any> KClass<T>.create(): T? {
     var instance :T? = null
+    kClassLogger.entry("create")
     for (it in this.constructors) {
         // デフォルトコンストラクタを探して呼び出す
         val params = it.parameters
         if (params.size() == 0) {
-            instance = it.call() as T
+            instance = it.call()
             break
         }
     }
+    kClassLogger.exit(instance)
     return instance
 }

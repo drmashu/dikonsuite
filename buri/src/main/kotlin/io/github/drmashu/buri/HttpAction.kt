@@ -2,6 +2,7 @@ package io.github.drmashu.buri
 
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
+import org.apache.logging.log4j.LogManager
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -10,6 +11,9 @@ import javax.servlet.http.HttpServletResponse
  */
 public open class HttpAction(request: HttpServletRequest, response: HttpServletResponse) : Action(request, response) {
 
+    companion object{
+        val logger = LogManager.getLogger(HttpAction::class.java)
+    }
     override fun encode(str: String): String = str
 
     /**
@@ -32,6 +36,7 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
      * リダイレクト
      */
     protected fun redirect(name: String, vararg args: Pair<String, Any>) {
+        logger.entry("redirect", name, args)
         val factory = __dikon.objectMap.get(name)
         val paramMap: MutableMap<String, Factory<*>> = hashMapOf(
                 Pair("request", Holder(request)),
@@ -47,6 +52,7 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
             paramMap.put(arg.first, value)
         }
         ___buri!!.callAction(factory!!, paramMap, request)
+        logger.exit()
     }
     protected fun responseByJson(result: Any) {
 

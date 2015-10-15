@@ -4,7 +4,10 @@ import io.github.drmashu.dikon.Container
 import io.github.drmashu.dikon.Dikon
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
+import org.apache.logging.log4j.LogManager
 import org.eclipse.jetty.servlet.DefaultServlet
+import org.eclipse.jetty.util.log.Log
+import org.eclipse.jetty.util.log.Slf4jLog
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -19,6 +22,7 @@ import java.util.regex.Pattern
 public abstract class Buri() : DefaultServlet() {
     companion object {
         val groupNamePattern = Pattern.compile("\\(\\?<([a-zA-Z][a-zA-Z0-9]+)>")
+        val logger = LogManager.getLogger(Buri::class.java)
     }
 
     /**
@@ -29,7 +33,7 @@ public abstract class Buri() : DefaultServlet() {
     /**
      * Dikon
      */
-    val dikon: Dikon = Dikon(config)
+    public val dikon: Dikon = Dikon(config)
 
     /** パスとアクションを結びつけるマップ */
     val pathMap: Map<String, List<Pair<NamedPattern, Factory<*>>>>
@@ -38,6 +42,7 @@ public abstract class Buri() : DefaultServlet() {
      * 初期化
      */
     init {
+        logger.entry("init")
         var result: MutableMap<String, MutableList<Pair<NamedPattern, Factory<*>>>> = HashMap()
         // "/"で始まるキーはビューまたはアクションとして扱う
         for (entry in dikon.objectMap) {
@@ -69,6 +74,7 @@ public abstract class Buri() : DefaultServlet() {
             }
         }
         pathMap = result
+        logger.exit()
     }
 
     /**
@@ -76,6 +82,7 @@ public abstract class Buri() : DefaultServlet() {
      * パス/メソッドに応じたアクション/ビューを呼び出す
      */
     public override final fun service(req: HttpServletRequest, res: HttpServletResponse) {
+        logger.entry("service", req, res)
         val list = pathMap[req.method]
         if (list != null) {
             for(item in list) {
@@ -99,28 +106,34 @@ public abstract class Buri() : DefaultServlet() {
         }
 
         super.service(req, res)
+        logger.exit()
     }
 
     /**
      *
      */
     fun callAction(factory: Factory<*>, paramMap: MutableMap<String, Factory<*>>, req: HttpServletRequest) {
+        logger.entry(factory, paramMap, req)
         val action = factory.get(ParamContainer(dikon, paramMap))
-        when (action) {
-            is HttpAction -> {
-                action.___buri = this
-                when (req.method) {
-                    "GET" -> action.get()
-                    "POST" -> action.post()
-                    "PUT" -> action.put()
-                    "DELETE" -> action.delete()
-                    else -> action.get()
+        try {
+            when (action) {
+                is HttpAction -> {
+                    action.___buri = this
+                    when (req.method) {
+                        "GET" -> action.get()
+                        "POST" -> action.post()
+                        "PUT" -> action.put()
+                        "DELETE" -> action.delete()
+                        else -> action.get()
+                    }
                 }
-            }
-            is Action ->{
+                is Action -> {
 
+                }
+                else -> throw InvalidTargetException()
             }
-            else -> throw InvalidTargetException()
+        } finally {
+            logger.exit()
         }
     }
 }
@@ -139,11 +152,19 @@ public class NamedPattern(val pattern: Pattern, val names: Array<String>)
  * パスのパラメータと、Dikonの両方から値を取得するコンテナ
  */
 public class ParamContainer(val dikon: Dikon, val params: Map<String, Factory<*>>): Container {
+    companion object {
+        val logger = LogManager.getLogger(ParamContainer::class.java)
+    }
     override fun get(name: String): Any? {
-        val result = params[name]
-        if (result != null) {
-            return result.get(dikon)
+        logger.entry(name)
+        val param = params[name]
+        var result :Any? = null
+        if (param != null) {
+            result = param.get(dikon)
+        } else {
+            result = dikon[name]
         }
-        return dikon[name]
+        logger.exit(result)
+        return result
     }
 }

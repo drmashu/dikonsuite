@@ -1,5 +1,6 @@
 package io.github.drmashu.buri
 
+import org.apache.logging.log4j.LogManager
 import java.io.Writer
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -13,10 +14,14 @@ import javax.servlet.http.HttpServletResponse
  */
 public abstract class HtmlAction(request: HttpServletRequest, response: HttpServletResponse): HttpAction(request, response){
 
+    companion object{
+        val logger = LogManager.getLogger(HtmlAction::class.java)
+    }
     /**
      * エンコード処理
      */
     protected override fun encode(str :String) :String {
+        logger.entry("encode", str)
         var buf = StringBuffer()
         for(ch in str) {
             buf.append(
@@ -30,6 +35,7 @@ public abstract class HtmlAction(request: HttpServletRequest, response: HttpServ
                     }
             )
         }
+        logger.exit(buf)
         return buf.toString()
     }
 }
