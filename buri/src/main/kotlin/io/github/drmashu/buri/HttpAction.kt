@@ -36,7 +36,7 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
      * リダイレクト
      */
     protected fun redirect(name: String, vararg args: Pair<String, Any>) {
-        logger.entry("redirect", name, args)
+        logger.entry(name, args)
         val factory = __dikon.objectMap.get(name)
         val paramMap: MutableMap<String, Factory<*>> = hashMapOf(
                 Pair("request", Holder(request)),

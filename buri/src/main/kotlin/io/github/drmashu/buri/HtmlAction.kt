@@ -21,7 +21,7 @@ public abstract class HtmlAction(request: HttpServletRequest, response: HttpServ
      * エンコード処理
      */
     protected override fun encode(str :String) :String {
-        logger.entry("encode", str)
+        logger.entry(str)
         var buf = StringBuffer()
         for(ch in str) {
             buf.append(

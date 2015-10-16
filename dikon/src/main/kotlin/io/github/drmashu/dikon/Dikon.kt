@@ -20,7 +20,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
      * @param name
      */
     public override fun get(name:String) : Any? {
-        logger.entry("get", name)
+        logger.entry(name)
         val obj:Any? = if (name == "logger") logger else objectMap[name]
 
         val result = injectProperties(
@@ -44,7 +44,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
      * @param obj 対象のオブジェクト
      */
     protected fun injectProperties(obj: Any?): Any? {
-        logger.entry("injectProperties", obj)
+        logger.entry(obj)
         if (obj != null) {
             val kClass = obj.javaClass.kotlin
             try {
@@ -96,7 +96,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
      * @param value セットする値
      */
     protected fun callSetter(obj: Any?, setter: Method?, value: Any?) {
-        logger.entry("callSetter", obj, setter, value)
+        logger.entry(obj, setter, value)
         if (setter != null && value != null) {
             val paramTypes = setter.parameterTypes
             if (paramTypes.size() == 1 && paramTypes[0].isAssignableFrom(value.javaClass)) {
@@ -122,7 +122,7 @@ val kClassLogger = LogManager.getLogger(KClass::class.java)
  */
 public fun <T: Any> KClass<T>.create(): T? {
     var instance :T? = null
-    kClassLogger.entry("create")
+    kClassLogger.entry()
     for (it in this.constructors) {
         // デフォルトコンストラクタを探して呼び出す
         val params = it.parameters

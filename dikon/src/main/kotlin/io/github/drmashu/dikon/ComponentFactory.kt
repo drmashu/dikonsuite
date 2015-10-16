@@ -33,11 +33,13 @@ public open class Singleton<T: Any>(val factory: Factory<T>) : Factory<T> {
      * @return インスタンス
      */
     public override fun get(dikon: Container) : T? {
+        logger.entry(dikon)
         // インスタンスが存在しない場合だけ、インスタンスを作成する
         if (instance == null) {
             instance = factory.get(dikon)
         }
         logger.trace("get ${if (instance == null) "null" else instance!!.javaClass.kotlin.qualifiedName}:${instance.toString()}")
+        logger.exit(instance)
         return instance
     }
 }
@@ -52,8 +54,11 @@ public open class Create<T: Any>(val kClass: KClass<T>) : Factory<T> {
         val logger = LogManager.getLogger(Create::class.java)
     }
     override fun get(dikon: Container): T? {
+        logger.entry(dikon)
         logger.trace("get ${kClass.qualifiedName}")
-        return kClass.create()
+        val instance =  kClass.create()
+        logger.exit(instance)
+        return instance
     }
 }
 
@@ -78,7 +83,7 @@ public open class Injection<T: Any>(val kClass: KClass<T>, vararg names: String)
      * @return インスタンス
      */
     public override fun get(dikon: Container): T? {
-        logger.entry("get")
+        logger.entry(dikon)
         logger.trace("Injection get ${kClass.qualifiedName}")
         var result: T? = null
         val constructor = kClass.primaryConstructor
@@ -97,13 +102,23 @@ public open class Injection<T: Any>(val kClass: KClass<T>, vararg names: String)
                     }
                 }
                 if (name != null) {
-                    logger.trace("Inject $name")
-                    if (name == "dikon") {
-                        paramArray[idx] = dikon
+                    val obj = if (name == "dikon") {
+                        dikon
                     } else {
-                        paramArray[idx] = dikon.get(name)
+                        dikon.get(name)
                     }
+                    logger.trace("Inject $name $obj")
+                    paramArray[idx] = obj
+                } else {
+                    logger.trace("Inject failed")
                 }
+            }
+            if (logger.isTraceEnabled) {
+                var params = "constructor.call params "
+                paramArray.forEach { item ->
+                    params += "$item, "
+                }
+                logger.trace(params)
             }
             result = constructor.call(*paramArray)
         } else {
@@ -133,6 +148,7 @@ public open class Injection<T: Any>(val kClass: KClass<T>, vararg names: String)
                 }
                 idx++
             }
+            result = jConstractor.newInstance(*paramArray) as T
         }
 
         logger.exit(result)
@@ -149,7 +165,9 @@ public class Holder<T: Any>(val value: T) : Factory<T> {
         val logger = LogManager.getLogger(Holder::class.java)
     }
     override fun get(dikon: Container): T? {
+        logger.entry()
         logger.trace("get ${value.javaClass.name}:${value.toString()}")
+        logger.exit(value)
         return value
     }
 }

@@ -42,7 +42,7 @@ public abstract class Buri() : DefaultServlet() {
      * 初期化
      */
     init {
-        logger.entry("init")
+        logger.entry()
         var result: MutableMap<String, MutableList<Pair<NamedPattern, Factory<*>>>> = HashMap()
         // "/"で始まるキーはビューまたはアクションとして扱う
         for (entry in dikon.objectMap) {
@@ -82,7 +82,7 @@ public abstract class Buri() : DefaultServlet() {
      * パス/メソッドに応じたアクション/ビューを呼び出す
      */
     public override final fun service(req: HttpServletRequest, res: HttpServletResponse) {
-        logger.entry("service", req, res)
+        logger.entry(req, res)
         val list = pathMap[req.method]
         if (list != null) {
             for(item in list) {
@@ -115,6 +115,7 @@ public abstract class Buri() : DefaultServlet() {
     fun callAction(factory: Factory<*>, paramMap: MutableMap<String, Factory<*>>, req: HttpServletRequest) {
         logger.entry(factory, paramMap, req)
         val action = factory.get(ParamContainer(dikon, paramMap))
+        logger.trace("action $action")
         try {
             when (action) {
                 is HttpAction -> {
