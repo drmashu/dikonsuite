@@ -11,6 +11,7 @@ import org.eclipse.jetty.server.handler.ResourceHandler
 import org.eclipse.jetty.servlet.ServletContextHandler
 import org.eclipse.jetty.servlet.ServletHolder
 import org.eclipse.jetty.util.resource.Resource
+import javax.servlet.MultipartConfigElement
 
 /**
  * Buri ランナークラス.
@@ -42,6 +43,7 @@ public class BuriRunner(val buri: Buri) {
         servletContextHandler.resourceBase = "./webapp"
 
         val holder = ServletHolder(buri)
+        holder.registration.setMultipartConfig(MultipartConfigElement("/WEB-INF/tmp", 1048576, 1048576, 262144))
         servletContextHandler.addServlet(holder, "/*")
 
         server.handler = servletContextHandler

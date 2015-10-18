@@ -1,5 +1,7 @@
 package io.github.drmashu.buri
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
@@ -13,6 +15,7 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
 
     companion object{
         val logger = LogManager.getLogger(HttpAction::class.java)
+        val objectMapper = ObjectMapper().registerModule(KotlinModule())
     }
     override fun encode(str: String): String = str
 
@@ -55,6 +58,8 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
         logger.exit()
     }
     protected fun responseByJson(result: Any) {
-
+        val resultString = objectMapper.writeValueAsString(result)
+        response.contentType = "application/json"
+        response.writer.print(resultString)
     }
 }
