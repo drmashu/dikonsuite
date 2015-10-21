@@ -43,7 +43,7 @@ public abstract class Buri() : DefaultServlet() {
      */
     init {
         logger.entry()
-        var result: MutableMap<String, MutableList<Pair<NamedPattern, Factory<*>>>> = HashMap()
+        var result: MutableMap<String, MutableList<kotlin.Pair<NamedPattern, Factory<*>>>> = HashMap()
         // "/"で始まるキーはビューまたはアクションとして扱う
         for (entry in dikon.objectMap) {
             if (!entry.key.startsWith("/")) continue
@@ -57,13 +57,13 @@ public abstract class Buri() : DefaultServlet() {
                 listOf("GET", "POST")
             }
             val pattern = Pattern.compile(key)
-            val names: MutableList<String> = arrayListOf()
+            val names = ArrayList<String>()
             val patternStr = pattern.pattern()
             val matcher = groupNamePattern.matcher(patternStr)
             while (matcher.find()) {
                 names.add(matcher.group(1))
             }
-            val value = NamedPattern(pattern, names.toTypedArray()) to entry.value
+            val value = NamedPattern(pattern, names.toArray(arrayOfNulls<String>(names.size))) to entry.value
             for (method in methods) {
                 var list = result.get(method)
                 if (list == null) {

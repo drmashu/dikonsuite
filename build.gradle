@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        kotlinVersion = '0.14.449'
+        kotlinVersion = '0.1-SNAPSHOT'
     }
     repositories {
         mavenCentral()
@@ -25,9 +25,9 @@ subprojects {
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
 
-    compileKotlin {
-        kotlinOptions.annotations = file('annotations')
-    }
+//    compileKotlin {
+//        kotlinOptions.annotations = file('annotations')
+//    }
     repositories {
         mavenCentral()
         maven {
@@ -56,7 +56,7 @@ project(':buri') {
         compile group: 'org.eclipse.jetty.websocket', name: 'websocket-server', version:'9.3.2.v20150730'
         compile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.+'
-        compile group: 'com.fasterxml.jackson.module', name:'jackson-module-kotlin', version:'2.6.+'
+        compile group: 'com.fasterxml.jackson.module', name:'jackson-module-kotlin', version:'0.1-SNAPSHOT'
         compile project(':dikon')
     }
 }

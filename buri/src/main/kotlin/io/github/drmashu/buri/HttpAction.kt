@@ -1,7 +1,7 @@
 package io.github.drmashu.buri
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.KotlinModule
+//import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
@@ -42,8 +42,8 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
         logger.entry(name, args)
         val factory = __dikon.objectMap.get(name)
         val paramMap: MutableMap<String, Factory<*>> = hashMapOf(
-                Pair("request", Holder(request)),
-                Pair("response", Holder(response))
+                "request" to Holder(request),
+                "response" to Holder(response)
         )
         for (arg in args) {
             var value =
