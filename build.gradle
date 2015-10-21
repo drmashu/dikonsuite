@@ -20,8 +20,10 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'ivy-publish'
     apply plugin: 'idea'
+    //tasks.withType(AbstractCompile)*.options*.encoding = 'UTF-8'
 
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
 
     compileKotlin {
         kotlinOptions.annotations = file('annotations')

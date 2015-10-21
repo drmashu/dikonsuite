@@ -49,9 +49,9 @@ public class PreCompiler {
                     // 出力先がなければ作る
                     destDir.mkdirs()
                 }
-                val reader = FileReader(srcFile)
+                val reader = InputStreamReader(FileInputStream(srcFile))
                 val distFile = File(destDir, name.substring(0, name.length() - 5))
-                val writer = FileWriter(distFile)
+                val writer = OutputStreamWriter(FileOutputStream(distFile), "UTF-8")
                 val className = name.substring(0, name.length() - 8)
                 precompile(reader, writer, packageName, className, rendererType.value)
                 writer.flush()
