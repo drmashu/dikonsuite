@@ -37,11 +37,12 @@
     <orderEntry type="module" module-name="dikon" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-api:2.4" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.logging.log4j:log4j-core:2.4" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.6.3" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.6.0" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-core:2.6.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.fasterxml.jackson.module:jackson-module-kotlin:0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.0.0-beta-1038" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-runtime:1.0.0-beta-1038" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-reflect:1.0.0-beta-1038" level="project" />
   </component>
 </module>

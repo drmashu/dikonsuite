@@ -1,17 +1,21 @@
 package io.github.drmashu.buri
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.kotlin.KotlinModule
 //import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
+import java.io.BufferedInputStream
+import java.io.FileInputStream
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 /**
  * Http Action
  */
-public open class HttpAction(request: HttpServletRequest, response: HttpServletResponse) : Action(request, response) {
+public open class HttpAction(context: ServletContext, request: HttpServletRequest, response: HttpServletResponse) : Action(context, request, response) {
 
     companion object{
         val logger = LogManager.getLogger(HttpAction::class.java)
@@ -61,5 +65,23 @@ public open class HttpAction(request: HttpServletRequest, response: HttpServletR
         val resultString = objectMapper.writeValueAsString(result)
         response.contentType = "application/json"
         response.writer.print(resultString)
+    }
+    protected fun responseFromFile(fileName: String) {
+        logger.entry(fileName)
+        val path = context.getRealPath(fileName)
+        logger.trace(path)
+        val inStr = BufferedInputStream(FileInputStream(path))
+        val outStr = response.outputStream
+        val buffer = ByteArray(4096)
+        var bytesRead = inStr.read(buffer)
+        while (bytesRead != -1)
+        {
+            outStr.write(buffer, 0, bytesRead)
+            bytesRead = inStr.read(buffer)
+        }
+        outStr.flush()
+        inStr.close()
+        outStr.close()
+        logger.exit()
     }
 }

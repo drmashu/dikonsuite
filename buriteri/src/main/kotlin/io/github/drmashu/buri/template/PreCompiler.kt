@@ -100,10 +100,11 @@ public class PreCompiler {
         writer.write("import java.util.*\n")
         writer.write("import java.io.Writer\n")
         writer.write("import javax.servlet.http.*\n")
+        writer.write("import javax.servlet.ServletContext\n")
         writer.write("import io.github.drmashu.buri.*\n")
 
         // クラス名
-        writer.write("class $className(request: HttpServletRequest, response: HttpServletResponse$param) : $typeName(request, response) {\n")
+        writer.write("class $className(context: ServletContext, request: HttpServletRequest, response: HttpServletResponse$param) : $typeName(context, request, response) {\n")
 
         // GETメソッドに実装
         writer.write("\tpublic override fun get() {\n")

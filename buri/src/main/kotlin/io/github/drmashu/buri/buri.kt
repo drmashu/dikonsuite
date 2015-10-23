@@ -91,7 +91,8 @@ public abstract class Buri() : DefaultServlet() {
                 if (matcher.matches()) {
                     val paramMap: MutableMap<String, Factory<*>> = hashMapOf(
                             "request" to Holder(req),
-                            "response" to Holder(res)
+                            "response" to Holder(res),
+                            "context" to Holder(servletContext)
                     )
                     for(name in item.first.names) {
                         paramMap.put(name, Holder(matcher.group(name)))

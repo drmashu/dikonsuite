@@ -2,6 +2,7 @@ package io.github.drmashu.buri
 
 import org.apache.logging.log4j.LogManager
 import java.io.Writer
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -12,7 +13,7 @@ import javax.servlet.http.HttpServletResponse
  * コンストラクタ引数の名称を変えてはならない。
  * @author NAGASAWA Takahiro<drmashu@gmail.com>
  */
-public abstract class HtmlAction(request: HttpServletRequest, response: HttpServletResponse): HttpAction(request, response){
+public abstract class HtmlAction(context: ServletContext, request: HttpServletRequest, response: HttpServletResponse): HttpAction(context, request, response){
 
     companion object{
         val logger = LogManager.getLogger(HtmlAction::class.java)

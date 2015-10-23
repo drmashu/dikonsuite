@@ -4,6 +4,7 @@ import io.github.drmashu.dikon.Dikon
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import java.io.Writer
+import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
@@ -14,7 +15,7 @@ import javax.servlet.http.HttpServletResponse
  * コンストラクタ引数の名称を変えてはならない。
  * @author NAGASAWA Takahiro<drmashu@gmail.com>
  */
-public abstract class Action(val request: HttpServletRequest, val response: HttpServletResponse) {
+public abstract class Action(val context: ServletContext, val request: HttpServletRequest, val response: HttpServletResponse) {
     var ___buri: Buri? = null
     val writer: Writer
         get() = response.writer
