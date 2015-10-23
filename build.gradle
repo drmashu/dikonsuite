@@ -3,6 +3,7 @@ buildscript {
         kotlinVersion = '0.1-SNAPSHOT'
     }
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             url 'http://oss.sonatype.org/content/repositories/snapshots'
@@ -20,7 +21,6 @@ subprojects {
     apply plugin: 'maven'
     apply plugin: 'ivy-publish'
     apply plugin: 'idea'
-    //tasks.withType(AbstractCompile)*.options*.encoding = 'UTF-8'
 
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
@@ -29,6 +29,7 @@ subprojects {
 //        kotlinOptions.annotations = file('annotations')
 //    }
     repositories {
+        mavenLocal()
         mavenCentral()
         maven {
             url 'http://oss.sonatype.org/content/repositories/snapshots'

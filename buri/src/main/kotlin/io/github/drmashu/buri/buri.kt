@@ -98,6 +98,7 @@ public abstract class Buri() : DefaultServlet() {
                     }
                     // デフォルトのコンテントタイプをhtmlにする
                     res.contentType = "text/html"
+                    res.characterEncoding = "UTF-8"
                     val factory = item.second
                     callAction(factory, paramMap, req)
                     return
