@@ -2,12 +2,13 @@ package io.github.drmashu.buri
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.github.mustachejava.DefaultMustacheFactory
+import com.github.mustachejava.MustacheFactory
 //import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
-import java.io.BufferedInputStream
-import java.io.FileInputStream
+import java.io.*
 import javax.servlet.ServletContext
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -82,6 +83,16 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
         outStr.flush()
         inStr.close()
         outStr.close()
+        logger.exit()
+    }
+    protected fun responseFromTemplate(fileName: String, obj: Any) {
+        logger.entry(fileName)
+        val path = context.getRealPath(fileName)
+        logger.trace(path)
+        val mf = DefaultMustacheFactory()
+        val reader = InputStreamReader(FileInputStream(path), "UTF-8")
+        val mustache = mf.compile(reader, path)
+        mustache.execute(PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8")), obj).flush()
         logger.exit()
     }
 }

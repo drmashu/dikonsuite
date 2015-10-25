@@ -158,6 +158,10 @@ public class ParamContainer(val dikon: Dikon, val params: Map<String, Factory<*>
     companion object {
         val logger = LogManager.getLogger(ParamContainer::class.java)
     }
+
+    /**
+     *
+     */
     override fun get(name: String): Any? {
         logger.entry(name)
         val param = params[name]

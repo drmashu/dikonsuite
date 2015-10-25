@@ -58,6 +58,7 @@ project(':buri') {
         compile group: 'javax.servlet', name: 'javax.servlet-api', version:'3.1.0'
         compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.6.+'
         compile group: 'com.fasterxml.jackson.module', name:'jackson-module-kotlin', version:'0.1-SNAPSHOT'
+        compile group: 'com.github.spullara.mustache.java', name:'compiler', version:'0.8.8+'
         compile project(':dikon')
     }
 }
