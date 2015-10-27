@@ -85,14 +85,14 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
         outStr.close()
         logger.exit()
     }
-    protected fun responseFromTemplate(fileName: String, obj: Any) {
+    protected fun responseFromTemplate(fileName: String, objs: Array<Any>) {
         logger.entry(fileName)
         val path = context.getRealPath(fileName)
         logger.trace(path)
         val mf = DefaultMustacheFactory()
         val reader = InputStreamReader(FileInputStream(path), "UTF-8")
         val mustache = mf.compile(reader, path)
-        mustache.execute(PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8")), obj).flush()
+        mustache.execute(PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8")), objs).flush()
         logger.exit()
     }
 }

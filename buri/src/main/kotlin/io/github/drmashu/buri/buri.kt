@@ -6,8 +6,6 @@ import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
 import org.eclipse.jetty.servlet.DefaultServlet
-import org.eclipse.jetty.util.log.Log
-import org.eclipse.jetty.util.log.Slf4jLog
 import java.util.*
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -154,7 +152,7 @@ public class NamedPattern(val pattern: Pattern, val names: Array<String>)
 /**
  * パスのパラメータと、Dikonの両方から値を取得するコンテナ
  */
-public class ParamContainer(val dikon: Dikon, val params: Map<String, Factory<*>>): Container {
+class ParamContainer(val dikon: Dikon, val params: Map<String, Factory<*>>): Container {
     companion object {
         val logger = LogManager.getLogger(ParamContainer::class.java)
     }
