@@ -2,8 +2,8 @@ package io.github.drmashu.buri
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import com.github.mustachejava.DefaultMustacheFactory
-import com.github.mustachejava.MustacheFactory
+import com.github.jknack.handlebars.Handlebars
+import com.github.jknack.handlebars.io.FileTemplateLoader
 //import com.fasterxml.jackson.module.kotlin.KotlinModule
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
@@ -87,12 +87,13 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
     }
     protected fun responseFromTemplate(fileName: String, objs: Array<Any>) {
         logger.entry(fileName)
-        val path = context.getRealPath(fileName)
+        val path = context.getRealPath("/templates")
         logger.trace(path)
-        val mf = DefaultMustacheFactory()
-        val reader = InputStreamReader(FileInputStream(path), "UTF-8")
-        val mustache = mf.compile(reader, path)
-        mustache.execute(PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8")), objs).flush()
+        val handlebars = Handlebars(FileTemplateLoader(path))
+        val template = handlebars.compile(fileName)
+        val writer = PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8"))
+        template.apply(objs, writer)
+        writer.flush()
         logger.exit()
     }
 }
