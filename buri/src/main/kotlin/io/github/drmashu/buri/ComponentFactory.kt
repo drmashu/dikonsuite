@@ -26,7 +26,7 @@ public class TemplateHolder(val fileName:String, val objNames: Array<String>):Fa
     override fun get(dikon: Container): HtmlAction? {
         return object:HtmlAction(dikon.get("context") as ServletContext, dikon.get("request") as HttpServletRequest, dikon.get("response") as HttpServletResponse) {
             override fun get() {
-                responseFromTemplate(fileName, Array<Any>(objNames.size, { idx -> dikon.get(objNames[idx])!! }))
+                responseFromTemplate(fileName, mapOf(*Array<Pair<String,Any>>(objNames.size, { idx -> (objNames[idx] to dikon.get(objNames[idx])!!) })))
             }
         }
     }
