@@ -85,7 +85,7 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
         outStr.close()
         logger.exit()
     }
-    protected fun responseFromTemplate(fileName: String, objs: Array<Any>) {
+    protected fun responseFromTemplate(fileName: String, objs: Array<Any>? = null) {
         logger.entry(fileName)
         val path = context.getRealPath("/templates")
         logger.trace(path)
