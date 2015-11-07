@@ -70,7 +70,7 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
 
                                 if (!annotation.name.isEmpty()) {
                                     name = annotation.name
-                                } else if( name.length() > 3 && (name.startsWith("set") || name.startsWith("Set"))) {
+                                } else if( name.length > 3 && (name.startsWith("set") || name.startsWith("Set"))) {
                                     // setで始まる場合はsetを除く
                                     name = member.name.substring(3)
                                 }

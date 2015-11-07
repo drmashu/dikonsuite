@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.github.jknack.handlebars.Handlebars
 import com.github.jknack.handlebars.io.FileTemplateLoader
-//import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.github.jknack.handlebars.io.ServletContextTemplateLoader
 import io.github.drmashu.dikon.Factory
 import io.github.drmashu.dikon.Holder
 import org.apache.logging.log4j.LogManager
@@ -59,7 +59,7 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
                     }
             paramMap.put(arg.first, value)
         }
-        ___buri!!.callAction(factory!!, paramMap, request)
+        ___buri!!.callAction(factory!!, paramMap, request, response)
         logger.exit()
     }
     protected fun responseByJson(result: Any) {
@@ -85,15 +85,28 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
         outStr.close()
         logger.exit()
     }
-    protected fun responseFromTemplate(fileName: String, objs: Array<Any>? = null) {
+    protected open fun responseFromTemplate(fileName: String, objs: Array<Any>? = null) {
         logger.entry(fileName)
-        val path = context.getRealPath("/templates")
-        logger.trace(path)
-        val handlebars = Handlebars(FileTemplateLoader(path))
+        val loader = ServletContextTemplateLoader(context)
+        loader.prefix = "/templates"
+        val handlebars = Handlebars(loader)
         val template = handlebars.compile(fileName)
         val writer = PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8"))
         template.apply(objs, writer)
         writer.flush()
         logger.exit()
+    }
+    protected fun redirect(location: String) {
+        logger.entry(location)
+        response.sendRedirect(location)
+        logger.exit()
+    }
+    protected fun forward(location: String) {
+        logger.entry(location)
+        request.getRequestDispatcher(location).forward(request, response)
+        logger.exit()
+    }
+    public open fun isAuthenticated(): Boolean {
+        return true
     }
 }

@@ -99,7 +99,7 @@ public abstract class Buri() : DefaultServlet() {
                     res.contentType = "text/html"
                     res.characterEncoding = "UTF-8"
                     val factory = item.second
-                    callAction(factory, paramMap, req)
+                    callAction(factory, paramMap, req, res)
                     return
                 }
             }
@@ -112,7 +112,7 @@ public abstract class Buri() : DefaultServlet() {
     /**
      *
      */
-    fun callAction(factory: Factory<*>, paramMap: MutableMap<String, Factory<*>>, req: HttpServletRequest) {
+    fun callAction(factory: Factory<*>, paramMap: MutableMap<String, Factory<*>>, req: HttpServletRequest, res: HttpServletResponse) {
         logger.entry(factory, paramMap, req)
         val action = factory.get(ParamContainer(dikon, paramMap))
         logger.trace("action $action")
@@ -120,16 +120,22 @@ public abstract class Buri() : DefaultServlet() {
             when (action) {
                 is HttpAction -> {
                     action.___buri = this
-                    when (req.method) {
-                        "GET" -> action.get()
-                        "POST" -> action.post()
-                        "PUT" -> action.put()
-                        "DELETE" -> action.delete()
-                        else -> action.get()
+                    if (action.isAuthenticated()) {
+                        when (req.method) {
+                            "GET" -> action.get()
+                            "POST" -> action.post()
+                            "PUT" -> action.put()
+                            "DELETE" -> action.delete()
+                            else -> action.get()
+                        }
+                    } else {
+                        val location = dikon.get("authenticate_location")
+                        if (location != null) {
+                            res.sendRedirect(location as String)
+                        } else {
+                            res.sendError(501)
+                        }
                     }
-                }
-                is Action -> {
-
                 }
                 else -> throw InvalidTargetException()
             }
