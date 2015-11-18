@@ -107,7 +107,7 @@ public open class Injection<T: Any>(val kClass: KClass<T>, vararg names: String)
                     } else {
                         dikon.get(name)
                     }
-                    logger.trace("Inject $name $obj")
+                    logger.trace("Inject $name ${(obj?:"").javaClass.name}")
                     paramArray[idx] = obj
                 } else {
                     logger.trace("Inject failed")

@@ -11,7 +11,6 @@ import kotlin.reflect.jvm.*
  * @param objectMap 生成したいオブジェクトに名前を付けたMap
  */
 public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
-
     companion object {
         val logger = LogManager.getLogger(Dikon::class.java)
     }
@@ -105,10 +104,15 @@ public class Dikon(val objectMap: Map<String, Factory<*>>) : Container {
         }
         logger.exit()
     }
+    override fun entrySet(): Set<Map.Entry<String, Any>> {
+        return objectMap.entries
+    }
 }
+
 
 interface Container {
     fun get(name: String) : Any?
+    fun entrySet(): Set<Map.Entry<String, Any>>
 }
 /**
  * 注入アノテーション

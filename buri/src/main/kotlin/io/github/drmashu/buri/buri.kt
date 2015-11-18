@@ -159,6 +159,10 @@ public class NamedPattern(val pattern: Pattern, val names: Array<String>)
  * パスのパラメータと、Dikonの両方から値を取得するコンテナ
  */
 class ParamContainer(val dikon: Dikon, val params: Map<String, Factory<*>>): Container {
+    override fun entrySet(): Set<Map.Entry<String, Any>> {
+        return setOf(*dikon.entrySet().toTypedArray(), *params.entries.toTypedArray())
+    }
+
     companion object {
         val logger = LogManager.getLogger(ParamContainer::class.java)
     }

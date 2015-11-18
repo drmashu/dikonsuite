@@ -85,14 +85,15 @@ public open class HttpAction(context: ServletContext, request: HttpServletReques
         outStr.close()
         logger.exit()
     }
-    protected open fun responseFromTemplate(fileName: String, objs: Array<Any>? = null) {
+    protected open fun responseFromTemplate(fileName: String, obj: Any? = null) {
         logger.entry(fileName)
         val loader = ServletContextTemplateLoader(context)
         loader.prefix = "/templates"
         val handlebars = Handlebars(loader)
         val template = handlebars.compile(fileName)
         val writer = PrintWriter(OutputStreamWriter(response.outputStream, "UTF-8"))
-        template.apply(objs, writer)
+
+        template.apply(obj, writer)
         writer.flush()
         logger.exit()
     }
