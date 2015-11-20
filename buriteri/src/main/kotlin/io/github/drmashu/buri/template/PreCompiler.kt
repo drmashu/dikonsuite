@@ -81,7 +81,7 @@ public class PreCompiler {
         // 一行目の先頭が"@"で始まっていたら、このレンダラーのパラメータが指定されるということ
         if (firstLine != null && firstLine.startsWith("@")) {
             // カッコ内をとりだして、レンダラーメソッドのパラメータにする
-            val match = FIRST_LINE.match(firstLine)
+            val match = FIRST_LINE.find(firstLine)
             param = match?.groups?.get(1)?.value
         } else {
             // 先頭行がパラメータ指定で始まっていないとエラー
